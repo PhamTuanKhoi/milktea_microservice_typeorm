@@ -1,2 +1,2 @@
-export * from './modules/common.module';
-export * from './services/common.service';
+export * from './modules/rmq.module';
+export * from './services/rmq.service';
