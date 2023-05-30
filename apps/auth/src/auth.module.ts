@@ -1,4 +1,4 @@
-import { MysqlModule, UserEntity } from '@app/common';
+import { MysqlModule, RmqModule, UserEntity } from '@app/common';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -12,6 +12,7 @@ import { AuthService } from './auth.service';
       envFilePath: './.env',
     }),
     MysqlModule.register([UserEntity], process.env.MYSQL_USER_URI),
+    RmqModule,
   ],
   controllers: [AuthController],
   providers: [AuthService],

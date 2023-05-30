@@ -35,13 +35,13 @@ services:
       - .env
     depends_on:
       - rabbitmq 
-      - db_user
+      - mysql_user
     volumes:
       - .:/usr/src/app # any change to base folder should be reflected
       - /usr/src/app/node_modules
     command: npm run start:dev auth # overrides CMD from dockerfile
 
-  db_user:
+  mysql_user:
     image: mysql:8.0
     restart: always
     environment:
@@ -50,7 +50,20 @@ services:
       MYSQL_USER: user
       MYSQL_PASSWORD: password
     ports:
-      - '3309:3306'
+      - '3307:3306'
     volumes:
       - ./db/data:/var/lib/mysql
+
+  mysql_product:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: microservice_product
+      MYSQL_USER: product
+      MYSQL_PASSWORD: password
+    ports:
+      - '3308:3306'
+    volumes:
+      - ./db/product:/var/lib/mysql
  
