@@ -3,10 +3,6 @@ import { ConfigService } from '@nestjs/config';
 import { ClientProxyFactory, Transport } from '@nestjs/microservices';
 import { RmqService } from '../services/rmq.service';
 
-interface RmqModuleOptions {
-  name: string;
-}
-
 @Module({
   providers: [RmqService],
   exports: [RmqService],

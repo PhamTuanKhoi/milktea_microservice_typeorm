@@ -23,6 +23,12 @@
       ],
       "@app/common/*": [
         "libs/common/src/*"
+      ],
+      "@app/gobal": [
+        "libs/gobal/src"
+      ],
+      "@app/gobal/*": [
+        "libs/gobal/src/*"
       ]
     }
   }

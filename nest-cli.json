@@ -36,6 +36,15 @@
       "compilerOptions": {
         "tsConfigPath": "libs/common/tsconfig.lib.json"
       }
+    },
+    "gobal": {
+      "type": "library",
+      "root": "libs/gobal",
+      "entryFile": "index",
+      "sourceRoot": "libs/gobal/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/gobal/tsconfig.lib.json"
+      }
     }
   }
 }

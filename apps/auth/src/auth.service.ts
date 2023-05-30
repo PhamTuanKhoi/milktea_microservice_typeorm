@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common';
+import { RegisterRequest } from 'libs/gobal/src';
 
 @Injectable()
 export class AuthService {
-  register(Payload): string {
-    console.log(Payload);
-
+  async register(registerRequest: RegisterRequest) {
     return 'Hello World!';
   }
 }

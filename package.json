@@ -25,9 +25,12 @@
     "@nestjs/core": "^9.0.0",
     "@nestjs/microservices": "^9.4.2",
     "@nestjs/platform-express": "^9.0.0",
+    "@nestjs/swagger": "^6.3.0",
     "@nestjs/typeorm": "^9.0.1",
     "amqp-connection-manager": "^4.1.13",
     "amqplib": "^0.10.3",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.0",
     "joi": "^17.9.2",
     "mysql2": "^3.3.3",
     "reflect-metadata": "^0.1.13",
@@ -78,7 +81,8 @@
       "<rootDir>/libs/"
     ],
     "moduleNameMapper": {
-      "^@app/common(|/.*)$": "<rootDir>/libs/common/src/$1"
+      "^@app/common(|/.*)$": "<rootDir>/libs/common/src/$1",
+      "^@app/gobal(|/.*)$": "<rootDir>/libs/gobal/src/$1"
     }
   }
 }
