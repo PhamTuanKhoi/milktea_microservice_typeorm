@@ -25,7 +25,7 @@ services:
     volumes:
       - .:/usr/src/app # any change folder should be reflected
       - /usr/src/app/node_modules
-    command: npm run start:dev api-gateway
+    command: npm run start:dev api-gateway 
 
   auth:
     build:
@@ -35,17 +35,22 @@ services:
       - .env
     depends_on:
       - rabbitmq 
-      - mysql
+      - db_user
     volumes:
       - .:/usr/src/app # any change to base folder should be reflected
       - /usr/src/app/node_modules
     command: npm run start:dev auth # overrides CMD from dockerfile
 
-  mysql:
+  db_user:
     image: mysql:8.0
-    env_file:
-      - .env
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: microservice_user
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
     ports:
       - '3309:3306'
     volumes:
       - ./db/data:/var/lib/mysql
+ 

@@ -1,3 +1,4 @@
+import { MysqlModule, UserEntity } from '@app/common';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -6,16 +7,11 @@ import { AuthService } from './auth.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        type: 'mysql',
-        url: configService.get<string>('MYSQL_URI'),
-        autoLoadEntities: true,
-        synchronize: true,
-      }),
-      inject: [ConfigService],
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: './.env',
     }),
+    MysqlModule.register([UserEntity], process.env.MYSQL_USER_URI),
   ],
   controllers: [AuthController],
   providers: [AuthService],

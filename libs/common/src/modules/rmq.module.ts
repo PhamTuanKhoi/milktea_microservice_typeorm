@@ -1,6 +1,6 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { ClientsModule, Transport } from '@nestjs/microservices';
+import { ClientProxyFactory, Transport } from '@nestjs/microservices';
 import { RmqService } from '../services/rmq.service';
 
 interface RmqModuleOptions {
@@ -12,25 +12,30 @@ interface RmqModuleOptions {
   exports: [RmqService],
 })
 export class RmqModule {
-  static register({ name }: RmqModuleOptions): DynamicModule {
+  static registerRmq(service: string, queue: string): DynamicModule {
+    const providers = [
+      {
+        provide: service,
+        useFactory: (configService: ConfigService) => {
+          return ClientProxyFactory.create({
+            transport: Transport.RMQ,
+            options: {
+              urls: [configService.get<string>('RABBITMQ_URI')],
+              queue,
+              queueOptions: {
+                durable: true, // queue survives broker restart -> true
+              },
+            },
+          });
+        },
+        inject: [ConfigService],
+      },
+    ];
+
     return {
       module: RmqModule,
-      imports: [
-        ClientsModule.registerAsync([
-          {
-            name,
-            useFactory: (configService: ConfigService) => ({
-              transport: Transport.RMQ,
-              options: {
-                urls: [configService.get<string>('RABBIT_MQ_URI')],
-                queue: configService.get<string>(`RABBIT_MQ_${name}_QUEUE`),
-              },
-            }),
-            inject: [ConfigService],
-          },
-        ]),
-      ],
-      exports: [ClientsModule],
+      providers,
+      exports: providers,
     };
   }
 }
