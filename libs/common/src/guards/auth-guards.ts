@@ -1,3 +1,4 @@
+import { AUTH_SERVICE } from '@app/gobal';
 import {
   CanActivate,
   ExecutionContext,
@@ -8,9 +9,7 @@ import { ClientProxy } from '@nestjs/microservices';
 import { catchError, Observable, of, switchMap } from 'rxjs';
 
 export class JwtAuthGuard implements CanActivate {
-  constructor(
-    @Inject('AUTH_SERVICE') private readonly authProxy: ClientProxy,
-  ) {}
+  constructor(@Inject(AUTH_SERVICE) private readonly authProxy: ClientProxy) {}
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
