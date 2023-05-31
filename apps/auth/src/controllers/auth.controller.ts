@@ -48,4 +48,14 @@ export class AuthController {
 
     return this.authService.verifyJwt(payload.jwt);
   }
+
+  @MessagePattern({ cmd: 'decode-jwt' })
+  async decodeJwt(
+    @Ctx() context: RmqContext,
+    @Payload() payload: { jwt: string },
+  ) {
+    this.rmqService.acknowledgeMessage(context);
+
+    return this.authService.decodeJwt(payload.jwt);
+  }
 }

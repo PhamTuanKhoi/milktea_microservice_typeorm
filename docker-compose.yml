@@ -57,7 +57,7 @@ services:
 
   mysql_user:
     image: mysql:8.0
-    restart: always
+    # restart: always 
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: microservice_user
@@ -70,7 +70,7 @@ services:
 
   mysql_product:
     image: mysql:8.0
-    restart: always
+    # restart: always 
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: microservice_product

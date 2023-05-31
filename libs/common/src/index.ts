@@ -9,3 +9,5 @@ export * from './entities/product.entity';
 export * from './entities/category.entity';
 // guard
 export * from './guards/auth-guards';
+// interceptor
+export * from './interceptors/user.interceptors';

@@ -70,4 +70,14 @@ export class AuthService {
       throw new UnauthorizedException();
     }
   }
+
+  async decodeJwt(jwt: string) {
+    try {
+      if (!jwt) return;
+
+      return await this.jwtService.decode(jwt);
+    } catch (error) {
+      throw new BadRequestException();
+    }
+  }
 }

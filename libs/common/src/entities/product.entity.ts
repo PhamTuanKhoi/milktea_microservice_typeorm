@@ -16,7 +16,10 @@ export class ProductEntity {
   price: number;
 
   @Column()
-  image: number;
+  image: string;
+
+  @Column()
+  creator: number;
 
   @ManyToOne(() => CategoryEntity, (category) => category.products)
   category: CategoryEntity;

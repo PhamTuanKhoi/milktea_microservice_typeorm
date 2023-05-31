@@ -9,6 +9,9 @@ export class CategoryEntity {
   @Column({ unique: true })
   name: string;
 
+  @Column()
+  creator: number;
+
   @OneToMany(() => ProductEntity, (product) => product.category)
   products: ProductEntity[];
 }

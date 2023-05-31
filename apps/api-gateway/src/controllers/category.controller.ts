@@ -1,5 +1,10 @@
-import { JwtAuthGuard } from '@app/common';
-import { AUTH_SERVICE, CATEGORY_SERVICE, QueryUserDto } from '@app/gobal';
+import { JwtAuthGuard, UserInterceptor } from '@app/common';
+import {
+  AUTH_SERVICE,
+  CATEGORY_SERVICE,
+  CreateCategoryDto,
+  QueryUserDto,
+} from '@app/gobal';
 import {
   Body,
   Controller,
@@ -8,6 +13,7 @@ import {
   Post,
   Query,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { ApiTags } from '@nestjs/swagger';
@@ -20,8 +26,13 @@ export class CategoryController {
   ) {}
 
   @Post()
-  async create(@Body() pay) {
-    return this.categoryProxy.send({ cmd: 'create-category' }, pay);
+  // @UseGuards(JwtAuthGuard)
+  @UseInterceptors(UserInterceptor)
+  async create(@Body() createCategoryDto: CreateCategoryDto) {
+    return this.categoryProxy.send(
+      { cmd: 'create-category' },
+      createCategoryDto,
+    );
   }
 
   @Get()

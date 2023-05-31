@@ -1,4 +1,5 @@
 import { RmqService } from '@app/common';
+import { CreateCategoryDto } from '@app/gobal';
 import { Controller } from '@nestjs/common';
 import {
   Ctx,
@@ -16,16 +17,19 @@ export class CategoryController {
   ) {}
 
   @MessagePattern({ cmd: 'create-category' })
-  async create(@Ctx() context: RmqContext, @Payload() pay) {
+  async create(
+    @Ctx() context: RmqContext,
+    @Payload() createCategoryDto: CreateCategoryDto,
+  ) {
     this.rmqService.acknowledgeMessage(context);
 
-    return this.categoryService.create(pay);
+    return this.categoryService.create(createCategoryDto);
   }
 
   @MessagePattern({ cmd: 'get-category' })
   async list(@Ctx() context: RmqContext) {
     this.rmqService.acknowledgeMessage(context);
 
-    return 'hi';
+    return this.categoryService.list();
   }
 }
