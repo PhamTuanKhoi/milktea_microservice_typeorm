@@ -1,5 +1,9 @@
 import { ProductEntity } from '@app/common';
-import { CreateProductDto, QueryProductDto } from '@app/gobal';
+import {
+  CreateProductDto,
+  ListEntiyReponse,
+  QueryProductDto,
+} from '@app/gobal';
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, ILike, Repository } from 'typeorm';
@@ -15,8 +19,10 @@ export class ProductService {
     private readonly categoryService: CategoryService,
   ) {}
 
-  async list(queryProductDto: QueryProductDto): Promise<ProductEntity[]> {
-    const { name, limit, page, sortBy, sortType } = queryProductDto;
+  async list(
+    queryProductDto: QueryProductDto,
+  ): Promise<ListEntiyReponse<ProductEntity>> {
+    const { name, limit, page, sortBy, sortType, categoryId } = queryProductDto;
 
     const query: FindManyOptions = {};
 
@@ -31,7 +37,31 @@ export class ProductService {
 
     if (limit) query.take = limit;
 
-    return this.productRepository.find(query);
+    query.relations = { category: true };
+
+    query.select = {
+      category: {
+        id: true,
+        name: true,
+      },
+    };
+
+    if (categoryId) {
+      query.where = {
+        category: {
+          id: categoryId,
+        },
+      };
+    }
+
+    const data = await this.productRepository.find(query);
+
+    return {
+      list: data,
+      count: data.length,
+      limit: +limit || 0,
+      page: +page || 0,
+    };
   }
 
   async create(createProductDto: CreateProductDto): Promise<ProductEntity> {

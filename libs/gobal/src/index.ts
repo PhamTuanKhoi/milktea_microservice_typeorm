@@ -11,3 +11,5 @@ export * from './dtos/product/query-product.dto';
 export * from './dtos/product/create-product.dto';
 // constants
 export * from './contants/service.proxy';
+// interface
+export * from './interface/list-entity.reponse';
