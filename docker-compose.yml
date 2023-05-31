@@ -41,6 +41,20 @@ services:
       - /usr/src/app/node_modules
     command: npm run start:dev auth # overrides CMD from dockerfile
 
+  product: 
+    build: 
+      context: ./
+      dockerfile: ./apps/product/Dockerfile
+    env_file:
+      - .env
+    depends_on:
+      - rabbitmq 
+      - mysql_product
+    volumes:
+      - .:/usr/src/app # any change folder should be reflected
+      - /usr/src/app/node_modules
+    command: npm run start:dev product 
+
   mysql_user:
     image: mysql:8.0
     restart: always
