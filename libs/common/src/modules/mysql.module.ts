@@ -1,7 +1,5 @@
 import { DynamicModule, Module } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserEntity } from '../entities/user.entity';
 
 @Module({})
 export class MysqlModule {
@@ -17,7 +15,9 @@ export class MysqlModule {
             synchronize: true,
           }),
         }),
+        TypeOrmModule.forFeature(entities),
       ],
+      exports: [TypeOrmModule],
     };
   }
 }

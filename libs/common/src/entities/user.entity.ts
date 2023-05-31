@@ -14,6 +14,6 @@ export class UserEntity {
   @Column({ select: false })
   password: string;
 
-  @Column()
+  @Column({ nullable: true })
   avartar: string;
 }

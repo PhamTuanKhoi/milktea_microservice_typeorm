@@ -7,7 +7,7 @@ import {
   RmqContext,
 } from '@nestjs/microservices';
 import { RegisterRequest } from 'libs/gobal/src';
-import { AuthService } from './auth.service';
+import { AuthService } from '../services/auth.service';
 
 @Controller()
 export class AuthController {

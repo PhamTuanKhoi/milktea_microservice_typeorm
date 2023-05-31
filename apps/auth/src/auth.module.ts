@@ -2,8 +2,10 @@ import { MysqlModule, RmqModule, UserEntity } from '@app/common';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AuthController } from './auth.controller';
-import { AuthService } from './auth.service';
+import { AuthController } from './controllers/auth.controller';
+import { UserController } from './controllers/user.controller';
+import { AuthService } from './services/auth.service';
+import { UserService } from './services/user.service';
 
 @Module({
   imports: [
@@ -14,7 +16,7 @@ import { AuthService } from './auth.service';
     MysqlModule.register([UserEntity], process.env.MYSQL_USER_URI),
     RmqModule,
   ],
-  controllers: [AuthController],
-  providers: [AuthService],
+  controllers: [AuthController, UserController],
+  providers: [AuthService, UserService],
 })
 export class AuthModule {}
