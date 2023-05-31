@@ -2,7 +2,7 @@ import { Body, Controller, Get, Inject, Post } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { ApiTags } from '@nestjs/swagger';
 
-@ApiTags('AUTH')
+@ApiTags('USER')
 @Controller('user')
 export class UserController {
   constructor(

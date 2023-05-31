@@ -6,7 +6,7 @@ import {
   Payload,
   RmqContext,
 } from '@nestjs/microservices';
-import { RegisterRequest } from 'libs/gobal/src';
+import { LoginRequest, RegisterRequest } from 'libs/gobal/src';
 import { AuthService } from '../services/auth.service';
 
 @Controller()
@@ -15,6 +15,16 @@ export class AuthController {
     private readonly authService: AuthService,
     private readonly rmqService: RmqService,
   ) {}
+
+  @MessagePattern({ cmd: 'login' })
+  async login(
+    @Ctx() context: RmqContext,
+    @Payload() loginRequest: LoginRequest,
+  ) {
+    this.rmqService.acknowledgeMessage(context);
+
+    return this.authService.login(loginRequest);
+  }
 
   @MessagePattern({ cmd: 'register' })
   async register(

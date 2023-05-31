@@ -42,7 +42,7 @@ export class UserService {
     return bcrypt.compareSync(passwordText, hashedPassword);
   }
 
-  async register(registerRequest: RegisterRequest) {
+  async register(registerRequest: RegisterRequest): Promise<UserEntity> {
     let { password, email } = registerRequest;
 
     try {
