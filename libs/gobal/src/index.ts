@@ -6,5 +6,7 @@ export * from './dtos/user/query-user.dto';
 
 export * from './dtos/category/create-category.dto';
 export * from './dtos/category/query-category.dto';
+
+export * from './dtos/product/query-product.dto';
 // constants
 export * from './contants/service.proxy';

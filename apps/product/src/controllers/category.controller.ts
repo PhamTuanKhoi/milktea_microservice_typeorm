@@ -16,7 +16,7 @@ export class CategoryController {
     private readonly categoryService: CategoryService,
   ) {}
 
-  @MessagePattern({ cmd: 'get-category' })
+  @MessagePattern({ cmd: 'get-categories' })
   async list(
     @Ctx() context: RmqContext,
     @Payload() queryCategoryDto: QueryCategoryDto,

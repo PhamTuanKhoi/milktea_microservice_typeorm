@@ -19,7 +19,7 @@ export class CategoryService {
     private readonly categoryRepository: Repository<CategoryEntity>,
   ) {}
 
-  async list(queryCategoryDto: QueryCategoryDto) {
+  async list(queryCategoryDto: QueryCategoryDto): Promise<CategoryEntity[]> {
     const { name, limit, page, sortBy, sortType } = queryCategoryDto;
 
     const query: FindManyOptions = {};

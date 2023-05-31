@@ -1,7 +1,7 @@
 import { JwtAuthGuard, UserInterceptor } from '@app/common';
 import {
-  CATEGORY_SERVICE,
   CreateCategoryDto,
+  PRODUCT_SERVICE,
   QueryCategoryDto,
 } from '@app/gobal';
 import {
@@ -21,12 +21,12 @@ import { ApiTags } from '@nestjs/swagger';
 @Controller('categories')
 export class CategoryController {
   constructor(
-    @Inject(CATEGORY_SERVICE) private readonly categoryProxy: ClientProxy,
+    @Inject(PRODUCT_SERVICE) private readonly categoryProxy: ClientProxy,
   ) {}
 
   @Get()
   async list(@Query() queryCategoryDto: QueryCategoryDto) {
-    return this.categoryProxy.send({ cmd: 'get-category' }, queryCategoryDto);
+    return this.categoryProxy.send({ cmd: 'get-categories' }, queryCategoryDto);
   }
 
   @Post()
