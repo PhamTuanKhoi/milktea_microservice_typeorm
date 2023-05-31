@@ -5,3 +5,5 @@ export * from './modules/mysql.module';
 export * from './services/rmq.service';
 // entity
 export * from './entities/user.entity';
+// guard
+export * from './guards/auth-guards';

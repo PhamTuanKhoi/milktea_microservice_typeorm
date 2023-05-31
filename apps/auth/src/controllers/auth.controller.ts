@@ -1,5 +1,5 @@
 import { RmqService } from '@app/common';
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, UseGuards } from '@nestjs/common';
 import {
   Ctx,
   MessagePattern,
@@ -7,6 +7,8 @@ import {
   RmqContext,
 } from '@nestjs/microservices';
 import { LoginRequest, RegisterRequest } from 'libs/gobal/src';
+import { JwtAuthGuard } from '../gaurd/jwt-gaurd';
+import { LocalAuthGuard } from '../gaurd/local-auth.guard';
 import { AuthService } from '../services/auth.service';
 
 @Controller()
@@ -17,6 +19,7 @@ export class AuthController {
   ) {}
 
   @MessagePattern({ cmd: 'login' })
+  // @UseGuards(LocalAuthGuard)
   async login(
     @Ctx() context: RmqContext,
     @Payload() loginRequest: LoginRequest,
@@ -34,5 +37,16 @@ export class AuthController {
     this.rmqService.acknowledgeMessage(context);
 
     return this.authService.register(registerRequest);
+  }
+
+  @MessagePattern({ cmd: 'verify-jwt' })
+  @UseGuards(JwtAuthGuard)
+  async verifyJwt(
+    @Ctx() context: RmqContext,
+    @Payload() payload: { jwt: string },
+  ) {
+    this.rmqService.acknowledgeMessage(context);
+
+    return this.authService.verifyJwt(payload.jwt);
   }
 }

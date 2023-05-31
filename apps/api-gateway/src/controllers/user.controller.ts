@@ -1,4 +1,5 @@
-import { Body, Controller, Get, Inject, Post } from '@nestjs/common';
+import { JwtAuthGuard } from '@app/common';
+import { Body, Controller, Get, Inject, Post, UseGuards } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { ApiTags } from '@nestjs/swagger';
 
@@ -10,6 +11,7 @@ export class UserController {
   ) {}
 
   @Get()
+  @UseGuards(JwtAuthGuard)
   list() {
     return this.authProxy.send({ cmd: 'get-users' }, {});
   }

@@ -10,6 +10,7 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LoginRequest, RegisterRequest } from 'libs/gobal/src';
 import { Repository } from 'typeorm';
+import { jwtSecret } from '../contants/contants';
 import { UserService } from './user.service';
 
 @Injectable()
@@ -59,5 +60,17 @@ export class AuthService {
 
   async register(registerRequest: RegisterRequest) {
     return this.userService.register(registerRequest);
+  }
+
+  async verifyJwt(jwt: string) {
+    try {
+      if (!jwt) throw new UnauthorizedException();
+
+      const { user, exp } = await this.jwtService.verifyAsync(jwt);
+
+      return { user, exp };
+    } catch (error) {
+      throw new UnauthorizedException();
+    }
   }
 }
