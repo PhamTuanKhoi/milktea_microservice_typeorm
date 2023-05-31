@@ -1,9 +1,8 @@
 import { JwtAuthGuard, UserInterceptor } from '@app/common';
 import {
-  AUTH_SERVICE,
   CATEGORY_SERVICE,
   CreateCategoryDto,
-  QueryUserDto,
+  QueryCategoryDto,
 } from '@app/gobal';
 import {
   Body,
@@ -25,18 +24,18 @@ export class CategoryController {
     @Inject(CATEGORY_SERVICE) private readonly categoryProxy: ClientProxy,
   ) {}
 
+  @Get()
+  async list(@Query() queryCategoryDto: QueryCategoryDto) {
+    return this.categoryProxy.send({ cmd: 'get-category' }, queryCategoryDto);
+  }
+
   @Post()
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @UseInterceptors(UserInterceptor)
   async create(@Body() createCategoryDto: CreateCategoryDto) {
     return this.categoryProxy.send(
       { cmd: 'create-category' },
       createCategoryDto,
     );
-  }
-
-  @Get()
-  async list() {
-    return this.categoryProxy.send({ cmd: 'get-category' }, {});
   }
 }
