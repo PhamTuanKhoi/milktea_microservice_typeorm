@@ -9,13 +9,13 @@ export class ProductEntity {
   @Column({ unique: true })
   name: string;
 
-  @Column()
+  @Column({ nullable: true })
   content: string;
 
   @Column()
   price: number;
 
-  @Column()
+  @Column({ nullable: true })
   image: string;
 
   @Column()

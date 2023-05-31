@@ -42,6 +42,10 @@ export class CategoryService {
     return this.categoryRepository.findOne({ where: { name } });
   }
 
+  async findById(id: number) {
+    return this.categoryRepository.findOne({ where: { id } });
+  }
+
   async create({ name, userId }: CreateCategoryDto) {
     try {
       const category_exist = await this.findByName(name);
@@ -61,6 +65,23 @@ export class CategoryService {
       return created;
     } catch (error) {
       this.logger.error(error?.messsage, error?.stack);
+      throw new BadRequestException();
+    }
+  }
+
+  async isModelExist(id: number) {
+    try {
+      const category = await this.findById(id);
+
+      if (!category || category === null)
+        throw new HttpException(
+          `category not found by id ${id}`,
+          HttpStatus.NOT_FOUND,
+        );
+
+      return category;
+    } catch (error) {
+      this.logger.error(error.message, error.stack);
       throw new BadRequestException();
     }
   }

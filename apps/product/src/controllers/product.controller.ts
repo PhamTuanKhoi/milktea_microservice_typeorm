@@ -1,5 +1,5 @@
 import { RmqService } from '@app/common';
-import { QueryCategoryDto } from '@app/gobal';
+import { CreateProductDto, QueryCategoryDto } from '@app/gobal';
 import { Controller, Get } from '@nestjs/common';
 import {
   Ctx,
@@ -24,5 +24,15 @@ export class ProductController {
     this.rmqService.acknowledgeMessage(context);
 
     return this.productService.list(queryCategoryDto);
+  }
+
+  @MessagePattern({ cmd: 'create-product' })
+  async create(
+    @Ctx() context: RmqContext,
+    @Payload() createProductDto: CreateProductDto,
+  ) {
+    this.rmqService.acknowledgeMessage(context);
+
+    return this.productService.create(createProductDto);
   }
 }
