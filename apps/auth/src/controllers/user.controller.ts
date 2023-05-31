@@ -1,4 +1,5 @@
 import { RmqService } from '@app/common';
+import { QueryUserDto } from '@app/gobal';
 import { Controller } from '@nestjs/common';
 import {
   Ctx,
@@ -16,9 +17,12 @@ export class UserController {
   ) {}
 
   @MessagePattern({ cmd: 'get-users' })
-  async list(@Ctx() context: RmqContext) {
+  async list(
+    @Ctx() context: RmqContext,
+    @Payload() queryUserDto: QueryUserDto,
+  ) {
     this.rmqService.acknowledgeMessage(context);
 
-    return this.userService.list();
+    return this.userService.list(queryUserDto);
   }
 }

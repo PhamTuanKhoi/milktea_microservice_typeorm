@@ -28,9 +28,8 @@ import { LocalStrategy } from './strategys/local.strategy';
     }),
     MysqlModule.register([UserEntity], process.env.MYSQL_USER_URI),
     RmqModule,
-    PassportModule,
   ],
   controllers: [AuthController, UserController],
-  providers: [AuthService, UserService, JwtStrategy, LocalStrategy],
+  providers: [AuthService, UserService, JwtStrategy],
 })
 export class AuthModule {}

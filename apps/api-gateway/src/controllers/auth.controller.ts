@@ -1,6 +1,6 @@
+import { LoginRequest, RegisterRequest } from '@app/gobal';
 import { Body, Controller, Get, Inject, Post } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { LoginRequest, RegisterRequest } from 'libs/gobal/src';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('AUTH')

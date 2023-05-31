@@ -1,4 +1,4 @@
-import { UserEntity } from '@app/common';
+import { LoginRequest, RegisterRequest } from '@app/gobal';
 import {
   BadRequestException,
   HttpException,
@@ -7,10 +7,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { InjectRepository } from '@nestjs/typeorm';
-import { LoginRequest, RegisterRequest } from 'libs/gobal/src';
-import { Repository } from 'typeorm';
-import { jwtSecret } from '../contants/contants';
+
 import { UserService } from './user.service';
 
 @Injectable()

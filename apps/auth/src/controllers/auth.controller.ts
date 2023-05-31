@@ -1,4 +1,5 @@
 import { RmqService } from '@app/common';
+import { LoginRequest, RegisterRequest } from '@app/gobal';
 import { Controller, Get, UseGuards } from '@nestjs/common';
 import {
   Ctx,
@@ -6,9 +7,7 @@ import {
   Payload,
   RmqContext,
 } from '@nestjs/microservices';
-import { LoginRequest, RegisterRequest } from 'libs/gobal/src';
 import { JwtAuthGuard } from '../gaurd/jwt-gaurd';
-import { LocalAuthGuard } from '../gaurd/local-auth.guard';
 import { AuthService } from '../services/auth.service';
 
 @Controller()

@@ -7,9 +7,9 @@ import {
   Logger,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { RegisterRequest } from 'libs/gobal/src';
-import { Repository } from 'typeorm';
+import { FindManyOptions, ILike, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { QueryUserDto, RegisterRequest } from '@app/gobal';
 
 @Injectable()
 export class UserService {
@@ -20,8 +20,23 @@ export class UserService {
     private readonly userRepository: Repository<UserEntity>,
   ) {}
 
-  async list(): Promise<UserEntity[]> {
-    return this.userRepository.find();
+  async list(queryUserDto: QueryUserDto): Promise<UserEntity[]> {
+    const { name, limit, page, sortBy, sortType } = queryUserDto;
+
+    const query: FindManyOptions = {};
+
+    if (name)
+      query.where = {
+        name: ILike(`%${name}%`),
+      };
+
+    if (sortBy && sortType) query.order = { [sortBy]: 'DESC' };
+
+    if (page) query.skip = (page - 1) * limit;
+
+    if (limit) query.take = limit;
+
+    return this.userRepository.find(query);
   }
 
   async findByEmail(email: string): Promise<UserEntity> {
