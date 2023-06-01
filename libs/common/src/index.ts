@@ -7,6 +7,7 @@ export * from './services/rmq.service';
 export * from './entities/user.entity';
 export * from './entities/product.entity';
 export * from './entities/category.entity';
+export * from './entities/cart.entity';
 // guard
 export * from './guards/auth-guards';
 // interceptor

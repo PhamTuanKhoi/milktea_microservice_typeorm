@@ -4,7 +4,13 @@ import {
   ListEntiyReponse,
   QueryProductDto,
 } from '@app/gobal';
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, ILike, Repository } from 'typeorm';
 import { CategoryService } from './category.service';
@@ -64,6 +70,10 @@ export class ProductService {
     };
   }
 
+  async findById(id: number): Promise<ProductEntity> {
+    return this.productRepository.findOne({ where: { id } });
+  }
+
   async create(createProductDto: CreateProductDto): Promise<ProductEntity> {
     try {
       const { category, userId } = createProductDto;
@@ -78,6 +88,23 @@ export class ProductService {
 
       this.logger.log(`created a product by id#${created?.id}`);
       return created;
+    } catch (error) {
+      this.logger.error(error.message, error.stack);
+      throw new BadRequestException();
+    }
+  }
+
+  async isExistModel(id: number): Promise<ProductEntity> {
+    try {
+      const exist = await this.findById(id);
+
+      if (!exist || exist === null)
+        throw new HttpException(
+          `product not found by id#${id}`,
+          HttpStatus.NOT_FOUND,
+        );
+
+      return exist;
     } catch (error) {
       this.logger.error(error.message, error.stack);
       throw new BadRequestException();

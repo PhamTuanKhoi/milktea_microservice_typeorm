@@ -46,6 +46,12 @@ export class UserService {
     });
   }
 
+  async findById(id: number): Promise<UserEntity> {
+    return this.userRepository.findOne({
+      where: { id },
+    });
+  }
+
   async hashPassword(password: string): Promise<string> {
     return bcrypt.hashSync(password, 12);
   }
@@ -77,6 +83,23 @@ export class UserService {
 
       this.logger.log(`register a new user by id#${created?.id}`);
       return created;
+    } catch (error) {
+      this.logger.error(error.message, error.stack);
+      throw new BadRequestException();
+    }
+  }
+
+  async isModelExist(id: number) {
+    try {
+      const user = await this.findById(id);
+
+      if (!user || user === null)
+        throw new HttpException(
+          `user not found by id ${id}`,
+          HttpStatus.NOT_FOUND,
+        );
+
+      return user;
     } catch (error) {
       this.logger.error(error.message, error.stack);
       throw new BadRequestException();

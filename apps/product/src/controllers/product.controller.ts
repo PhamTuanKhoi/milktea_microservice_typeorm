@@ -1,5 +1,9 @@
 import { RmqService } from '@app/common';
-import { CreateProductDto, QueryCategoryDto } from '@app/gobal';
+import {
+  CreateProductDto,
+  QueryCategoryDto,
+  QueryProductDto,
+} from '@app/gobal';
 import { Controller, Get } from '@nestjs/common';
 import {
   Ctx,
@@ -19,11 +23,11 @@ export class ProductController {
   @MessagePattern({ cmd: 'get-products' })
   async list(
     @Ctx() context: RmqContext,
-    @Payload() queryCategoryDto: QueryCategoryDto,
+    @Payload() queryProductDto: QueryProductDto,
   ) {
     this.rmqService.acknowledgeMessage(context);
 
-    return this.productService.list(queryCategoryDto);
+    return this.productService.list(queryProductDto);
   }
 
   @MessagePattern({ cmd: 'create-product' })
@@ -34,5 +38,15 @@ export class ProductController {
     this.rmqService.acknowledgeMessage(context);
 
     return this.productService.create(createProductDto);
+  }
+
+  @MessagePattern({ cmd: 'exist-product' })
+  async isExistProduct(
+    @Ctx() context: RmqContext,
+    @Payload() productId: number,
+  ) {
+    this.rmqService.acknowledgeMessage(context);
+
+    return this.productService.isExistModel(productId);
   }
 }

@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { CartEntity } from './cart.entity';
 
 @Entity('user')
 export class UserEntity {
@@ -16,4 +17,7 @@ export class UserEntity {
 
   @Column({ nullable: true })
   avartar: string;
+
+  @OneToMany(() => CartEntity, (cart) => cart.orderer)
+  carts: CartEntity[];
 }

@@ -9,6 +9,8 @@ export * from './dtos/category/query-category.dto';
 
 export * from './dtos/product/query-product.dto';
 export * from './dtos/product/create-product.dto';
+
+export * from './dtos/cart/create-cart.dto';
 // constants
 export * from './contants/service.proxy';
 // interface

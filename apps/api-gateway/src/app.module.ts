@@ -3,6 +3,7 @@ import { AUTH_SERVICE, PRODUCT_SERVICE } from '@app/gobal';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AuthController } from './controllers/auth.controller';
+import { CartController } from './controllers/cart.controller';
 import { CategoryController } from './controllers/category.controller';
 import { ProductController } from './controllers/product.controller';
 import { UserController } from './controllers/user.controller';
@@ -21,6 +22,7 @@ import { UserController } from './controllers/user.controller';
     UserController,
     CategoryController,
     ProductController,
+    CartController,
   ],
   providers: [],
 })

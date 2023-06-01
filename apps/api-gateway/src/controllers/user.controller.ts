@@ -20,7 +20,7 @@ export class UserController {
   ) {}
 
   @Get()
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   list(@Query() queryUserDto: QueryUserDto) {
     return this.authProxy.send({ cmd: 'get-users' }, queryUserDto);
   }
