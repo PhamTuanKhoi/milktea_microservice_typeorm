@@ -1,4 +1,9 @@
-import { CartEntity, UserEntity } from '@app/common';
+import {
+  CartEntity,
+  CartResponse,
+  ProductEntity,
+  UserEntity,
+} from '@app/common';
 import {
   BadRequestException,
   HttpException,
@@ -10,7 +15,13 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, ILike, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { CreateCartDto, PRODUCT_SERVICE } from '@app/gobal';
+import {
+  CreateCartDto,
+  CustomText,
+  ListEntiyReponse,
+  PRODUCT_SERVICE,
+  QueryCartDto,
+} from '@app/gobal';
 import { UserService } from './user.service';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
@@ -26,26 +37,52 @@ export class CartService {
     @Inject(PRODUCT_SERVICE) private readonly productProxy: ClientProxy,
   ) {}
 
-  // async list(queryUserDto: QueryUserDto): Promise<UserEntity[]> {
-  //   const { name, limit, page, sortBy, sortType } = queryUserDto;
+  async list(
+    queryCartDto: QueryCartDto,
+  ): Promise<ListEntiyReponse<CartEntity>> {
+    const { limit, page, sortBy, sortType, ...q } = queryCartDto;
 
-  //   const query: FindManyOptions = {};
+    const query: FindManyOptions = {};
 
-  //   if (name)
-  //     query.where = {
-  //       name: ILike(`%${name}%`),
-  //     };
+    if (sortBy && sortType) query.order = { [sortBy]: sortType };
 
-  //   if (sortBy && sortType) query.order = { [sortBy]: 'DESC' };
+    query.relations = { orderer: true };
 
-  //   if (page) query.skip = (page - 1) * limit;
+    let carts: CartResponse[] = await this.cartRepository.find(query);
 
-  //   if (limit) query.take = limit;
+    // get products by cart id
+    const list_ob$ = carts.map((i) =>
+      this.productProxy.send({ cmd: 'get-product-by-id' }, i.productId),
+    );
 
-  //   return this.userRepository.find(query);
-  // }
+    const promise_firstValueFrom = list_ob$.map((item) =>
+      firstValueFrom(item).catch((error) => this.logger.error(error)),
+    );
 
-  async create(createCartDto: CreateCartDto) {
+    const products: ProductEntity[] = await Promise.all(promise_firstValueFrom);
+
+    carts.map((i) =>
+      products.map((val) => (i.productId === val.id ? (i.product = val) : i)),
+    );
+
+    if (q.productId) carts = carts.filter((i) => i.productId === +q.productId);
+
+    if (q.productName)
+      carts = carts.filter((i) =>
+        CustomText(i.product.name).includes(CustomText(q.productName)),
+      );
+
+    if (page && limit) carts = carts.slice((+page - 1) * +limit, +limit + 1);
+
+    return {
+      list: carts,
+      count: carts.length,
+      limit: +limit || 0,
+      page: +page || 0,
+    };
+  }
+
+  async create(createCartDto: CreateCartDto): Promise<CartEntity> {
     const { userId, productId, quantity } = createCartDto;
 
     try {

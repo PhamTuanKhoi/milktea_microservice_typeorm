@@ -30,6 +30,13 @@ export class ProductController {
     return this.productService.list(queryProductDto);
   }
 
+  @MessagePattern({ cmd: 'get-product-by-id' })
+  async findById(@Ctx() context: RmqContext, @Payload() productId: number) {
+    this.rmqService.acknowledgeMessage(context);
+
+    return this.productService.findById(productId);
+  }
+
   @MessagePattern({ cmd: 'create-product' })
   async create(
     @Ctx() context: RmqContext,

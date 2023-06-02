@@ -1,5 +1,5 @@
 import { JwtAuthGuard, UserInterceptor } from '@app/common';
-import { CreateCartDto, QueryUserDto } from '@app/gobal';
+import { CreateCartDto, QueryCartDto, QueryUserDto } from '@app/gobal';
 import {
   Body,
   Controller,
@@ -19,6 +19,12 @@ export class CartController {
   constructor(
     @Inject('AUTH_SERVICE') private readonly authProxy: ClientProxy,
   ) {}
+
+  @Get()
+  // @UseGuards(JwtAuthGuard)
+  list(@Query() queryCartDto: QueryCartDto) {
+    return this.authProxy.send({ cmd: 'get-carts' }, queryCartDto);
+  }
 
   @Post()
   @UseGuards(JwtAuthGuard)

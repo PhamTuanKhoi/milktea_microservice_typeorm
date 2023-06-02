@@ -1,5 +1,5 @@
 import { RmqService } from '@app/common';
-import { CreateCartDto, QueryUserDto } from '@app/gobal';
+import { CreateCartDto, QueryCartDto, QueryUserDto } from '@app/gobal';
 import { Controller } from '@nestjs/common';
 import {
   Ctx,
@@ -17,8 +17,18 @@ export class CartController {
     private readonly cartService: CartService,
   ) {}
 
-  @MessagePattern({ cmd: 'create-cart' })
+  @MessagePattern({ cmd: 'get-carts' })
   async list(
+    @Ctx() context: RmqContext,
+    @Payload() queryCartDto: QueryCartDto,
+  ) {
+    this.rmqService.acknowledgeMessage(context);
+
+    return this.cartService.list(queryCartDto);
+  }
+
+  @MessagePattern({ cmd: 'create-cart' })
+  async create(
     @Ctx() context: RmqContext,
     @Payload() createCartDto: CreateCartDto,
   ) {
