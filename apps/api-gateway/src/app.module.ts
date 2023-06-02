@@ -1,10 +1,11 @@
 import { RmqModule } from '@app/common';
-import { AUTH_SERVICE, PRODUCT_SERVICE } from '@app/gobal';
+import { AUTH_SERVICE, ORTHER_SERVICE, PRODUCT_SERVICE } from '@app/gobal';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AuthController } from './controllers/auth.controller';
 import { CartController } from './controllers/cart.controller';
 import { CategoryController } from './controllers/category.controller';
+import { OrtherController } from './controllers/orther.controller';
 import { ProductController } from './controllers/product.controller';
 import { UserController } from './controllers/user.controller';
 
@@ -16,6 +17,7 @@ import { UserController } from './controllers/user.controller';
     }),
     RmqModule.registerRmq(AUTH_SERVICE, process.env.RABBITMQ_AUTH_QUEUE),
     RmqModule.registerRmq(PRODUCT_SERVICE, process.env.RABBITMQ_PRODUCT_QUEUE),
+    RmqModule.registerRmq(ORTHER_SERVICE, process.env.RABBITMQ_ORTHER_QUEUE),
   ],
   controllers: [
     AuthController,
@@ -23,6 +25,7 @@ import { UserController } from './controllers/user.controller';
     CategoryController,
     ProductController,
     CartController,
+    OrtherController,
   ],
   providers: [],
 })

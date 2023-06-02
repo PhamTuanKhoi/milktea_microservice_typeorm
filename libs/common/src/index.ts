@@ -8,6 +8,9 @@ export * from './entities/user.entity';
 export * from './entities/product.entity';
 export * from './entities/category.entity';
 export * from './entities/cart.entity';
+
+export * from './entities/orther.entity';
+export * from './entities/orther-item.entity';
 // guard
 export * from './guards/auth-guards';
 // interceptor
