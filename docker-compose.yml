@@ -110,4 +110,15 @@ services:
       - '3309:3306'
     volumes:
       - ./db/orther:/var/lib/mysql
+
+  redis:
+    image: 'bitnami/redis:latest' 
+    env_file:
+      - .env
+    ports:
+      - '${REDIS_PORT}:6379'
+    volumes:
+      - ./redis:/data
+
+ 
  
