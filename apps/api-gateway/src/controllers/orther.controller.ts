@@ -4,6 +4,7 @@ import {
   CreateProductDto,
   ORTHER_SERVICE,
   PRODUCT_SERVICE,
+  QueryOrtherDto,
   QueryProductDto,
 } from '@app/gobal';
 import {
@@ -28,6 +29,13 @@ export class OrtherController {
     @Inject(ORTHER_SERVICE) private readonly ortherProxy: ClientProxy,
     @InjectQueue('test') private audioQueue: Queue,
   ) {}
+
+  @Get()
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(UserInterceptor)
+  async list(@Body() queryOrtherDto: QueryOrtherDto) {
+    return this.ortherProxy.send({ cmd: 'get-orthers' }, queryOrtherDto);
+  }
 
   @Post()
   @UseGuards(JwtAuthGuard)

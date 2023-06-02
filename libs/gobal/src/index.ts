@@ -14,6 +14,7 @@ export * from './dtos/cart/create-cart.dto';
 export * from './dtos/cart/query-cart.dto';
 
 export * from './dtos/orther/create-orther.dto';
+export * from './dtos/orther/query-orther.dto';
 // constants
 export * from './contants/service.proxy';
 export * from './contants/mixture';
