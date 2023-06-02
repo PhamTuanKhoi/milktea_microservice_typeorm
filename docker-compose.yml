@@ -20,8 +20,11 @@ services:
       - '3001:3001'
     env_file:
       - .env
-    depends_on:
+    depends_on: #  start dependency
       - rabbitmq 
+      - auth
+      - product
+      - orther
     volumes:
       - .:/usr/src/app # any change folder should be reflected
       - /usr/src/app/node_modules
@@ -55,6 +58,20 @@ services:
       - /usr/src/app/node_modules
     command: npm run start:dev product 
 
+  orther: 
+    build: 
+      context: ./
+      dockerfile: ./apps/orther/Dockerfile
+    env_file:
+      - .env
+    depends_on:
+      - rabbitmq 
+      - mysql_orther
+    volumes:
+      - .:/usr/src/app # any change folder should be reflected
+      - /usr/src/app/node_modules
+    command: npm run start:dev orther 
+
   mysql_user:
     image: mysql:8.0
     # restart: always 
@@ -80,4 +97,17 @@ services:
       - '3308:3306'
     volumes:
       - ./db/product:/var/lib/mysql
+
+  mysql_orther:
+    image: mysql:8.0
+    # restart: always 
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: microservice_orther
+      MYSQL_USER: orther
+      MYSQL_PASSWORD: password
+    ports:
+      - '3309:3306'
+    volumes:
+      - ./db/orther:/var/lib/mysql
  

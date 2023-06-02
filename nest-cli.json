@@ -54,6 +54,15 @@
       "compilerOptions": {
         "tsConfigPath": "apps/product/tsconfig.app.json"
       }
+    },
+    "orther": {
+      "type": "application",
+      "root": "apps/orther",
+      "entryFile": "main",
+      "sourceRoot": "apps/orther/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/orther/tsconfig.app.json"
+      }
     }
   }
 }
