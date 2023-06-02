@@ -1,6 +1,7 @@
 // module
 export * from './modules/rmq.module';
 export * from './modules/mysql.module';
+export * from './modules/bull.module';
 // service
 export * from './services/rmq.service';
 // entity

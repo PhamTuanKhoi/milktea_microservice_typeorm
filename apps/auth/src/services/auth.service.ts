@@ -4,6 +4,7 @@ import {
   HttpException,
   HttpStatus,
   Injectable,
+  Logger,
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -12,6 +13,8 @@ import { UserService } from './user.service';
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
+
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
@@ -31,13 +34,20 @@ export class AuthService {
         user.password,
       );
 
+      if (!match)
+        throw new HttpException(
+          `Password does not exist!!`,
+          HttpStatus.NOT_FOUND,
+        );
+
       if (user && match) {
         return { ...user, password: user.password };
       }
 
       return null;
     } catch (error) {
-      throw new BadRequestException();
+      this.logger.error(error.message, error.stack);
+      throw new UnauthorizedException();
     }
   }
 

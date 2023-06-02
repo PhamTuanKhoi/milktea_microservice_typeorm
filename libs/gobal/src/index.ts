@@ -16,6 +16,7 @@ export * from './dtos/cart/query-cart.dto';
 export * from './dtos/orther/create-orther.dto';
 // constants
 export * from './contants/service.proxy';
+export * from './contants/mixture';
 // interface
 export * from './interface/list-entity.reponse';
 // function

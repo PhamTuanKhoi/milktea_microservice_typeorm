@@ -20,4 +20,7 @@ export class OrtherEntity {
 
   @OneToMany(() => OrtherItemEntity, (item) => item.orther)
   ortherItems: OrtherItemEntity[];
+
+  @Column()
+  ortherer: number;
 }

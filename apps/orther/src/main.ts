@@ -16,5 +16,8 @@ async function bootstrap() {
   app.connectMicroservice<MicroserviceOptions>(rmqService.getOptions(queue));
 
   app.startAllMicroservices();
+
+  // if want use bull queue -> open port
+  await app.listen(3002);
 }
 bootstrap();

@@ -67,6 +67,7 @@ services:
     depends_on:
       - rabbitmq 
       - mysql_orther
+      - redis
     volumes:
       - .:/usr/src/app # any change folder should be reflected
       - /usr/src/app/node_modules

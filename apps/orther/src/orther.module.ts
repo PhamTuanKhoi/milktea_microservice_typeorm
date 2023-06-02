@@ -1,14 +1,17 @@
 import {
+  BullModuleCache,
   MysqlModule,
   OrtherEntity,
   OrtherItemEntity,
   RmqModule,
 } from '@app/common';
-import { PRODUCT_SERVICE } from '@app/gobal';
+import { BULL_ORTHER_QUEUE, PRODUCT_SERVICE } from '@app/gobal';
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { OrtherController } from './controllers/orther.controller';
 import { OrtherService } from './services/orther.service';
+import { BullModule } from '@nestjs/bull';
+import { OrtherConsumer } from './consumers/orther.consumer';
 
 @Module({
   imports: [
@@ -21,8 +24,12 @@ import { OrtherService } from './services/orther.service';
       process.env.MYSQL_ORTHER_URI,
     ),
     RmqModule.registerRmq(PRODUCT_SERVICE, process.env.RABBITMQ_PRODUCT_QUEUE),
+    BullModuleCache.register(),
+    BullModule.registerQueue({
+      name: BULL_ORTHER_QUEUE,
+    }),
   ],
   controllers: [OrtherController],
-  providers: [OrtherService],
+  providers: [OrtherService, OrtherConsumer],
 })
 export class OrtherModule {}

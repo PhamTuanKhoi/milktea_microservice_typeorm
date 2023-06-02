@@ -18,12 +18,15 @@ import {
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { ApiTags } from '@nestjs/swagger';
+import { Queue } from 'bull';
+import { InjectQueue } from '@nestjs/bull';
 
 @ApiTags('ORTHER')
 @Controller('orther')
 export class OrtherController {
   constructor(
     @Inject(ORTHER_SERVICE) private readonly ortherProxy: ClientProxy,
+    @InjectQueue('test') private audioQueue: Queue,
   ) {}
 
   @Post()
