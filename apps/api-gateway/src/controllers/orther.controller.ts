@@ -3,8 +3,10 @@ import { CreateOrtherDto, ORTHER_SERVICE, QueryOrtherDto } from '@app/gobal';
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Inject,
+  Param,
   Post,
   Query,
   UseGuards,
@@ -32,5 +34,12 @@ export class OrtherController {
   @UseInterceptors(UserInterceptor)
   async create(@Body() createOrtherDto: CreateOrtherDto) {
     return this.ortherProxy.send({ cmd: 'create-orther' }, createOrtherDto);
+  }
+
+  @Delete(':id')
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(UserInterceptor)
+  async delete(@Param('id') id: number) {
+    return this.ortherProxy.send({ cmd: 'delete-orther' }, id);
   }
 }

@@ -22,7 +22,7 @@ import { JwtStrategy } from './strategys/jwt.stratery';
       useFactory: () => ({
         secret: jwtSecret,
         signOptions: {
-          expiresIn: '3600s',
+          expiresIn: '14400s',
         },
       }),
     }),

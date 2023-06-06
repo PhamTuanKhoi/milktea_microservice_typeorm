@@ -19,6 +19,7 @@ import { Queue } from 'bull';
 import { InjectRepository } from '@nestjs/typeorm';
 import { OrtherEntity, OrtherResponse, UserEntity } from '@app/common';
 import { FindManyOptions, Repository } from 'typeorm';
+import { OrtherItemService } from './orther-item.service';
 
 @Injectable()
 export class OrtherService {
@@ -29,6 +30,7 @@ export class OrtherService {
     @InjectQueue(BULL_ORTHER_QUEUE) private readonly otherBullQueue: Queue,
     @InjectRepository(OrtherEntity)
     private readonly ortherRepository: Repository<OrtherEntity>,
+    private readonly ortherItemService: OrtherItemService,
   ) {}
 
   async list(
@@ -77,12 +79,28 @@ export class OrtherService {
       return await Promise.all(promise_firstValueFrom);
     } catch (error) {
       this.logger.error(error.message, error.stack);
+      throw new BadRequestException();
     }
   }
 
   async create(createOrtherDto: CreateOrtherDto) {
     try {
       return await this.otherBullQueue.add('create-orther', createOrtherDto);
+    } catch (error) {
+      this.logger.error(error.message, error.stack);
+      throw new BadRequestException();
+    }
+  }
+
+  async delete(id: number) {
+    try {
+      await this.ortherItemService.deleteByOrtherId(id);
+
+      const deleted = await this.ortherRepository.delete({ id });
+
+      this.logger.log(`deleted a orther item by id#${id}`);
+
+      return deleted;
     } catch (error) {
       this.logger.error(error.message, error.stack);
       throw new BadRequestException();

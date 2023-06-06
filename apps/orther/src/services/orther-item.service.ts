@@ -7,7 +7,12 @@ import {
   PRODUCT_SERVICE,
   QueryOrtherItemDto,
 } from '@app/gobal';
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { firstValueFrom } from 'rxjs';
@@ -31,51 +36,58 @@ export class OrtherItemService {
 
     let query: FindManyOptions = {};
 
-    if (sortBy && sortType) query.order = { [sortBy]: sortType };
+    try {
+      if (sortBy && sortType) query.order = { [sortBy]: sortType };
 
-    query.relations = { orther: true };
+      query.relations = { orther: true };
 
-    let ortherItems: OrtherItemResponse[] =
-      await this.ortherItemRepository.find(query);
+      let ortherItems: OrtherItemResponse[] =
+        await this.ortherItemRepository.find(query);
 
-    // get and validate user by user id
-    const users: UserEntity[] = await this.getAndValidateUserById(ortherItems);
-
-    // get and validate product by product id
-    const products: ProductEntity[] = await this.getAndValidateProductById(
-      ortherItems,
-    );
-
-    // add user at ortherItems
-    ortherItems.map((i) =>
-      users.map((val) => (i.orther.ortherer === val.id ? (i.user = val) : i)),
-    );
-
-    // add product at ortherItems
-    ortherItems.map((i) =>
-      products.map((val) => (i.productId === val.id ? (i.product = val) : i)),
-    );
-
-    if (userId)
-      ortherItems = ortherItems.filter((item) => item?.user?.id === +userId);
-
-    if (q.productName)
-      ortherItems = ortherItems.filter((item) =>
-        CustomText(item?.product.name).includes(CustomText(q.productName)),
+      // get and validate user by user id
+      const users: UserEntity[] = await this.getAndValidateUserById(
+        ortherItems,
       );
 
-    if (page && limit)
-      ortherItems = ortherItems.slice(
-        (+page - 1) * +limit,
-        +limit + (+page - 1),
+      // get and validate product by product id
+      const products: ProductEntity[] = await this.getAndValidateProductById(
+        ortherItems,
       );
 
-    return {
-      list: ortherItems,
-      count: ortherItems.length,
-      limit: +limit || 0,
-      page: +page || 0,
-    };
+      // add user at ortherItems
+      ortherItems.map((i) =>
+        users.map((val) => (i.orther.ortherer === val.id ? (i.user = val) : i)),
+      );
+
+      // add product at ortherItems
+      ortherItems.map((i) =>
+        products.map((val) => (i.productId === val.id ? (i.product = val) : i)),
+      );
+
+      if (userId)
+        ortherItems = ortherItems.filter((item) => item?.user?.id === +userId);
+
+      if (q.productName)
+        ortherItems = ortherItems.filter((item) =>
+          CustomText(item?.product.name).includes(CustomText(q.productName)),
+        );
+
+      if (page && limit)
+        ortherItems = ortherItems.slice(
+          (+page - 1) * +limit,
+          +limit + (+page - 1),
+        );
+
+      return {
+        list: ortherItems,
+        count: ortherItems.length,
+        limit: +limit || 0,
+        page: +page || 0,
+      };
+    } catch (error) {
+      this.logger.error(error.message, error.stack);
+      throw new BadRequestException();
+    }
   }
 
   async getAndValidateUserById(ortherItems: OrtherItemResponse[]) {
@@ -91,6 +103,7 @@ export class OrtherItemService {
       return await Promise.all(promise_firstValueFrom_users);
     } catch (error) {
       this.logger.error(error.message, error.stack);
+      throw new BadRequestException();
     }
   }
 
@@ -107,6 +120,24 @@ export class OrtherItemService {
       return await Promise.all(promise_firstValueFrom_product);
     } catch (error) {
       this.logger.error(error.message, error.stack);
+      throw new BadRequestException();
+    }
+  }
+
+  async deleteByOrtherId(id: number) {
+    try {
+      const deleted = await this.ortherItemRepository.delete({
+        orther: { id },
+      });
+
+      this.logger.log(
+        `deleted ${deleted?.affected} orther item by orther id#${id}`,
+      );
+
+      return deleted;
+    } catch (error) {
+      this.logger.error(error.message, error.stack);
+      throw new BadRequestException();
     }
   }
 }

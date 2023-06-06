@@ -35,4 +35,11 @@ export class OrtherController {
 
     return this.ortherService.create(createOrtherDto);
   }
+
+  @MessagePattern({ cmd: 'delete-orther' })
+  async delete(@Ctx() context: RmqContext, @Payload() id: number) {
+    this.rmqService.acknowledgeMessage(context);
+
+    return this.ortherService.delete(id);
+  }
 }
