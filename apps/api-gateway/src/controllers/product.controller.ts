@@ -1,10 +1,17 @@
 import { JwtAuthGuard, UserInterceptor } from '@app/common';
-import { CreateProductDto, PRODUCT_SERVICE, QueryProductDto } from '@app/gobal';
+import {
+  CreateProductDto,
+  PRODUCT_SERVICE,
+  QueryProductDto,
+  UpdateProductDto,
+} from '@app/gobal';
 import {
   Body,
   Controller,
   Get,
   Inject,
+  Param,
+  Patch,
   Post,
   Query,
   UseGuards,
@@ -30,5 +37,18 @@ export class ProductController {
   @UseInterceptors(UserInterceptor)
   async create(@Body() createProductDto: CreateProductDto) {
     return this.productProxy.send({ cmd: 'create-product' }, createProductDto);
+  }
+
+  @Patch(':id')
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(UserInterceptor)
+  async update(
+    @Param('id') id: number,
+    @Body() updateProductDto: UpdateProductDto,
+  ) {
+    return this.productProxy.send(
+      { cmd: 'update-product' },
+      { ...updateProductDto, id },
+    );
   }
 }

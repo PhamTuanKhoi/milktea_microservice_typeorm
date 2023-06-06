@@ -3,6 +3,7 @@ import {
   CreateProductDto,
   ListEntiyReponse,
   QueryProductDto,
+  UpdateProductDto,
 } from '@app/gobal';
 import {
   BadRequestException,
@@ -74,6 +75,10 @@ export class ProductService {
     return this.productRepository.findOne({ where: { id } });
   }
 
+  async findByName(name: string): Promise<ProductEntity> {
+    return this.productRepository.findOne({ where: { name } });
+  }
+
   async create(createProductDto: CreateProductDto): Promise<ProductEntity> {
     try {
       const { category, userId } = createProductDto;
@@ -88,6 +93,36 @@ export class ProductService {
 
       this.logger.log(`created a product by id#${created?.id}`);
       return created;
+    } catch (error) {
+      this.logger.error(error.message, error.stack);
+      throw new BadRequestException();
+    }
+  }
+
+  async update(updateProductDto: UpdateProductDto): Promise<ProductEntity> {
+    const { id, categoryId } = updateProductDto;
+    try {
+      // unique name product
+      const exist_name = await this.findByName(updateProductDto.name);
+
+      if (exist_name)
+        throw new HttpException(`name product is exist!!`, HttpStatus.CONFLICT);
+      // get and validate category by categoryId
+      const category = await this.categoryService.isModelExist(categoryId);
+
+      const product = new ProductEntity();
+
+      product.name = updateProductDto.name;
+      product.image = updateProductDto.image;
+      product.price = updateProductDto.price;
+      product.content = updateProductDto.content;
+      product.creator = updateProductDto.userId;
+      product.category = category;
+
+      await this.productRepository.update(id, product);
+      this.logger.log(`updated a product by id#${id}`);
+
+      return this.findById(id);
     } catch (error) {
       this.logger.error(error.message, error.stack);
       throw new BadRequestException();

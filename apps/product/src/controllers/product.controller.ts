@@ -1,10 +1,10 @@
 import { RmqService } from '@app/common';
 import {
   CreateProductDto,
-  QueryCategoryDto,
   QueryProductDto,
+  UpdateProductDto,
 } from '@app/gobal';
-import { Controller, Get } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import {
   Ctx,
   MessagePattern,
@@ -55,5 +55,15 @@ export class ProductController {
     this.rmqService.acknowledgeMessage(context);
 
     return this.productService.isExistModel(productId);
+  }
+
+  @MessagePattern({ cmd: 'update-product' })
+  async update(
+    @Ctx() context: RmqContext,
+    @Payload() updateProductDto: UpdateProductDto,
+  ) {
+    this.rmqService.acknowledgeMessage(context);
+
+    return this.productService.update(updateProductDto);
   }
 }
