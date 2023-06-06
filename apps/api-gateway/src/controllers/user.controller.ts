@@ -1,13 +1,15 @@
-import { JwtAuthGuard } from '@app/common';
-import { QueryUserDto } from '@app/gobal';
+import { JwtAuthGuard, UserInterceptor } from '@app/common';
+import { QueryUserDto, UpdateUserDto } from '@app/gobal';
 import {
   Body,
   Controller,
   Get,
   Inject,
-  Post,
+  Param,
+  Patch,
   Query,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { ApiTags } from '@nestjs/swagger';
@@ -23,5 +25,15 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   list(@Query() queryUserDto: QueryUserDto) {
     return this.authProxy.send({ cmd: 'get-users' }, queryUserDto);
+  }
+
+  @Patch(':id')
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(UserInterceptor)
+  async update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
+    return this.authProxy.send(
+      { cmd: 'update-user' },
+      { ...updateUserDto, id },
+    );
   }
 }

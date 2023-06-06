@@ -1,5 +1,5 @@
 import { RmqService } from '@app/common';
-import { QueryUserDto } from '@app/gobal';
+import { QueryUserDto, UpdateUserDto, UpdateUserDtoById } from '@app/gobal';
 import { Controller } from '@nestjs/common';
 import {
   Ctx,
@@ -24,6 +24,16 @@ export class UserController {
     this.rmqService.acknowledgeMessage(context);
 
     return this.userService.list(queryUserDto);
+  }
+
+  @MessagePattern({ cmd: 'update-user' })
+  async update(
+    @Ctx() context: RmqContext,
+    @Payload() updateUserDto: UpdateUserDtoById,
+  ) {
+    this.rmqService.acknowledgeMessage(context);
+
+    return this.userService.update(updateUserDto);
   }
 
   @MessagePattern({ cmd: 'exist-user' })

@@ -9,7 +9,12 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, ILike, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { ListEntiyReponse, QueryUserDto, RegisterRequest } from '@app/gobal';
+import {
+  ListEntiyReponse,
+  QueryUserDto,
+  RegisterRequest,
+  UpdateUserDtoById,
+} from '@app/gobal';
 
 @Injectable()
 export class UserService {
@@ -92,6 +97,30 @@ export class UserService {
 
       this.logger.log(`register a new user by id#${created?.id}`);
       return created;
+    } catch (error) {
+      this.logger.error(error.message, error.stack);
+      throw new BadRequestException();
+    }
+  }
+
+  async update(updateUserDtoById: UpdateUserDtoById): Promise<UserEntity> {
+    const { id, email, name, avatar } = updateUserDtoById;
+    try {
+      const user = await this.findByEmail(email);
+
+      if (user && user !== null)
+        throw new HttpException(`email is exist!!`, HttpStatus.CONFLICT);
+
+      const userModel = new UserEntity();
+
+      userModel.name = name;
+      userModel.email = email;
+      userModel.avatar = avatar;
+
+      const updated = await this.userRepository.update(id, userModel);
+      this.logger.log(`updated a user by id#${updated?.affected}`);
+
+      return this.findById(id);
     } catch (error) {
       this.logger.error(error.message, error.stack);
       throw new BadRequestException();
