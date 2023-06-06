@@ -1,5 +1,9 @@
 import { RmqService } from '@app/common';
-import { CreateOrtherDto, QueryOrtherDto } from '@app/gobal';
+import {
+  CreateOrtherDto,
+  QueryOrtherDto,
+  QueryOrtherItemDto,
+} from '@app/gobal';
 import { Controller, Get } from '@nestjs/common';
 import {
   Ctx,
@@ -17,9 +21,12 @@ export class OrtherItemController {
   ) {}
 
   @MessagePattern({ cmd: 'get-ortherItems' })
-  async list(@Ctx() context: RmqContext, @Payload() queryOrtherDto) {
+  async list(
+    @Ctx() context: RmqContext,
+    @Payload() queryOrtherItemDto: QueryOrtherItemDto,
+  ) {
     this.rmqService.acknowledgeMessage(context);
 
-    return this.ortherItemService.list(queryOrtherDto);
+    return this.ortherItemService.list(queryOrtherItemDto);
   }
 }

@@ -1,5 +1,5 @@
 import { JwtAuthGuard, UserInterceptor } from '@app/common';
-import { ORTHER_SERVICE } from '@app/gobal';
+import { ORTHER_SERVICE, QueryOrtherItemDto } from '@app/gobal';
 import {
   Controller,
   Get,
@@ -21,10 +21,10 @@ export class OrtherItemController {
   @Get()
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(UserInterceptor)
-  async list(@Query() queryOrtherDto) {
+  async list(@Query() queryOrtherItemDto: QueryOrtherItemDto) {
     return this.ortherItemProxy.send(
       { cmd: 'get-ortherItems' },
-      queryOrtherDto,
+      queryOrtherItemDto,
     );
   }
 }

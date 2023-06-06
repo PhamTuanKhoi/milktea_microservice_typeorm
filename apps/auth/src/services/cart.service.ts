@@ -44,16 +44,10 @@ export class CartService {
 
     let carts: CartResponse[] = await this.cartRepository.find(query);
 
-    // get products by cart id
-    const list_ob$ = carts.map((i) =>
-      this.productProxy.send({ cmd: 'get-product-by-id' }, i.productId),
+    // get products by product id
+    const products: ProductEntity[] = await this.getAndValidateProductById(
+      carts,
     );
-
-    const promise_firstValueFrom = list_ob$.map((item) =>
-      firstValueFrom(item).catch((error) => this.logger.error(error)),
-    );
-
-    const products: ProductEntity[] = await Promise.all(promise_firstValueFrom);
 
     carts.map((i) =>
       products.map((val) => (i.productId === val.id ? (i.product = val) : i)),
@@ -75,6 +69,22 @@ export class CartService {
       limit: +limit || 0,
       page: +page || 0,
     };
+  }
+
+  async getAndValidateProductById(carts: CartResponse[]) {
+    try {
+      const list_ob$ = carts.map((i) =>
+        this.productProxy.send({ cmd: 'get-product-by-id' }, i.productId),
+      );
+
+      const promise_firstValueFrom = list_ob$.map((item) =>
+        firstValueFrom(item).catch((error) => this.logger.error(error)),
+      );
+
+      return await Promise.all(promise_firstValueFrom);
+    } catch (error) {
+      this.logger.error(error.message, error.stack);
+    }
   }
 
   async create(createCartDto: CreateCartDto): Promise<CartEntity> {
