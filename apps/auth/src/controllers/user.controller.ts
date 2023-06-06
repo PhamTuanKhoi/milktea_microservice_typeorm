@@ -25,4 +25,11 @@ export class UserController {
 
     return this.userService.list(queryUserDto);
   }
+
+  @MessagePattern({ cmd: 'exist-user' })
+  async exist_user(@Ctx() context: RmqContext, @Payload() userId: number) {
+    this.rmqService.acknowledgeMessage(context);
+
+    return this.userService.isModelExist(userId);
+  }
 }

@@ -1,9 +1,4 @@
-import {
-  CartEntity,
-  CartResponse,
-  ProductEntity,
-  UserEntity,
-} from '@app/common';
+import { CartEntity, CartResponse, ProductEntity } from '@app/common';
 import {
   BadRequestException,
   HttpException,
@@ -13,8 +8,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindManyOptions, ILike, Repository } from 'typeorm';
-import * as bcrypt from 'bcrypt';
+import { FindManyOptions, Repository } from 'typeorm';
 import {
   CreateCartDto,
   CustomText,
@@ -72,7 +66,8 @@ export class CartService {
         CustomText(i.product.name).includes(CustomText(q.productName)),
       );
 
-    if (page && limit) carts = carts.slice((+page - 1) * +limit, +limit + 1);
+    if (page && limit)
+      carts = carts.slice((+page - 1) * +limit, +limit + (+page - 1));
 
     return {
       list: carts,

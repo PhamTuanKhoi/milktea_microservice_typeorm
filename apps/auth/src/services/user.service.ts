@@ -42,7 +42,7 @@ export class UserService {
   async findByEmail(email: string): Promise<UserEntity> {
     return this.userRepository.findOne({
       where: { email },
-      select: ['id', 'email', 'name', 'password', 'avartar'],
+      select: ['id', 'email', 'name', 'password', 'avatar'],
     });
   }
 

@@ -6,7 +6,7 @@ export interface CartResponse {
     id: number;
     name: string;
     email: string;
-    avartar: string;
+    avatar: string;
   };
   product?: {
     id: number;

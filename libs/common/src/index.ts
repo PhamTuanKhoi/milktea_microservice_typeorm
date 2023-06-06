@@ -18,3 +18,4 @@ export * from './guards/auth-guards';
 export * from './interceptors/user.interceptors';
 // interface
 export * from './interface/type/cart.respone';
+export * from './interface/type/orther.respone';

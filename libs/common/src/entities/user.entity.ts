@@ -16,7 +16,7 @@ export class UserEntity {
   password: string;
 
   @Column({ nullable: true })
-  avartar: string;
+  avatar: string;
 
   @OneToMany(() => CartEntity, (cart) => cart.orderer)
   carts: CartEntity[];
