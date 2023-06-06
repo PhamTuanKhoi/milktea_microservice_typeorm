@@ -3,7 +3,6 @@ import {
   BULL_ORTHER_QUEUE,
   CreateOrtherDto,
   ListEntiyReponse,
-  PRODUCT_SERVICE,
   QueryOrtherDto,
 } from '@app/gobal';
 import {
