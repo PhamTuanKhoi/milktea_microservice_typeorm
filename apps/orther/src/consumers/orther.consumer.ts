@@ -32,6 +32,7 @@ export class OrtherConsumer {
   @Process('create-orther')
   async create(job: Job<CreateOrtherDto>) {
     const { userId, orthersStringify } = job.data;
+
     const orthers = JSON.parse(orthersStringify);
 
     let products = [];
@@ -71,7 +72,9 @@ export class OrtherConsumer {
 
   @OnQueueActive()
   onActive(job: Job) {
-    console.log(`Processing job ${job.id} of type ${job.name} with data  ...`);
+    this.logger.log(
+      `Processing job ${job.id} of type ${job.name} with data  ...`,
+    );
   }
 
   @OnGlobalQueueCompleted()

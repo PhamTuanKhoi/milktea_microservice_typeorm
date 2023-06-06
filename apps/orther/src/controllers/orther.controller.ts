@@ -1,6 +1,6 @@
 import { RmqService } from '@app/common';
-import { CreateCartDto, CreateOrtherDto, QueryOrtherDto } from '@app/gobal';
-import { Controller, Get } from '@nestjs/common';
+import { CreateOrtherDto, QueryOrtherDto } from '@app/gobal';
+import { Controller } from '@nestjs/common';
 import {
   Ctx,
   MessagePattern,

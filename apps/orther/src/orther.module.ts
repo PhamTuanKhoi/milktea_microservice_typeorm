@@ -12,6 +12,8 @@ import { OrtherController } from './controllers/orther.controller';
 import { OrtherService } from './services/orther.service';
 import { BullModule } from '@nestjs/bull';
 import { OrtherConsumer } from './consumers/orther.consumer';
+import { OrtherItemController } from './controllers/orther-item.controller';
+import { OrtherItemService } from './services/orther-item.service';
 
 @Module({
   imports: [
@@ -29,7 +31,7 @@ import { OrtherConsumer } from './consumers/orther.consumer';
       name: BULL_ORTHER_QUEUE,
     }),
   ],
-  controllers: [OrtherController],
-  providers: [OrtherService, OrtherConsumer],
+  controllers: [OrtherController, OrtherItemController],
+  providers: [OrtherService, OrtherConsumer, OrtherItemService],
 })
 export class OrtherModule {}

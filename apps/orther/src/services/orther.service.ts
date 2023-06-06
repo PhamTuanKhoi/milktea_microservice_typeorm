@@ -30,7 +30,9 @@ export class OrtherService {
   ) {}
 
   async list(queryOrtherDto: QueryOrtherDto) {
-    return this.ortherRepository.find();
+    const data = await this.ortherRepository.find();
+
+    return data;
   }
 
   async create(createOrtherDto: CreateOrtherDto) {

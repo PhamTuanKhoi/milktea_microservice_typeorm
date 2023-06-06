@@ -1,12 +1,5 @@
 import { JwtAuthGuard, UserInterceptor } from '@app/common';
-import {
-  CreateOrtherDto,
-  CreateProductDto,
-  ORTHER_SERVICE,
-  PRODUCT_SERVICE,
-  QueryOrtherDto,
-  QueryProductDto,
-} from '@app/gobal';
+import { CreateOrtherDto, ORTHER_SERVICE, QueryOrtherDto } from '@app/gobal';
 import {
   Body,
   Controller,
@@ -19,21 +12,18 @@ import {
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { ApiTags } from '@nestjs/swagger';
-import { Queue } from 'bull';
-import { InjectQueue } from '@nestjs/bull';
 
 @ApiTags('ORTHER')
 @Controller('orther')
 export class OrtherController {
   constructor(
     @Inject(ORTHER_SERVICE) private readonly ortherProxy: ClientProxy,
-    @InjectQueue('test') private audioQueue: Queue,
   ) {}
 
   @Get()
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(UserInterceptor)
-  async list(@Body() queryOrtherDto: QueryOrtherDto) {
+  async list(@Query() queryOrtherDto: QueryOrtherDto) {
     return this.ortherProxy.send({ cmd: 'get-orthers' }, queryOrtherDto);
   }
 
